@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'szbpwp*mb73b#w7#9x1%*9o&3=_q!4e*p$%2kfr04k5df-m50&'
+SECRET_KEY = 'super-secret-key' # os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'telegram',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +119,51 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'format': '[%(asctime)s]: %(levelname)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'formatter': 'verbose',
+            'class': 'logging.StreamHandler'
+        },
+        'file_handler': {
+            'filename': os.path.join(BASE_DIR, 'logs', 'telegram.log'),
+            'class': 'logging.handlers.RotatingFileHandler',
+            'encoding': 'utf-8',
+            'formatter': 'verbose',
+            'maxBytes': 1024 * 1024 * 50,
+            'backupCount': 50,
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'telegram.bot': {
+            'handlers': ['file_handler'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    }
+}
