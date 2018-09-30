@@ -1,1 +1,3 @@
-{% for next in latest %} [{{ next.title }}]({{ next.link }}) {% endfor %}
+{% for title, url in latest %} 
+[{{ title }}]({{ url }})
+{% endfor %}
