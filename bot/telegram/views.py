@@ -18,10 +18,10 @@ TelegramBot = telepot.Bot(TOKEN)
 logger = logging.getLogger('telegram.bot')
 
 def _display_help():
-    return render_to_string('help.md')
+    return render_to_string('telegram/help.md')
 
 def _display_hn():
-    return render_to_string('feed.md', {'items': parse_hn()})
+    return render_to_string('telegram/feed.md', {'latest': parse_hn()})
 
 class CommandReceiveView(View):
     def post(self, request, bot_token):
