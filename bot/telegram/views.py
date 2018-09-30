@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.conf import settings
 
-from utils import parse_hn
+from .utils import parse_hn
 
 
 TOKEN = os.environ["BOT_TOKEN"]
@@ -28,10 +28,11 @@ class CommandReceiveView(View):
 
         if bot_token != TOKEN:
             return HttpResponseForbidden('Invalid token')
+
         commands = {
             '/start': _display_help,
             'help': _display_help,
-            'new': _display_planetpy_feed,
+            'new': _display_hn,
         }
 
         raw = request.body.decode('utf-8')
@@ -43,12 +44,12 @@ class CommandReceiveView(View):
             return HttpResponseBadRequest('Invalid request body')
         else:
             chat_id = payload['message']['chat']['id']
-            command = payload['message'].get('text')
+            command = payload['message']['chat']['text']
             func = commands.get(command.split()[0].lower())
             if func:
                 TelegramBot.sendMessage(chat_id, func(), parse_mode='Markdown')
             else:
-                TelegramBot.sendMessage(chat_id, 'Try one of these: ' + str(list(commands.keys()))
+                TelegramBot.sendMessage(chat_id, 'Try one of these: ' + str(list(commands.keys())))
 
         return JsonResponse({}, status=200)
 
