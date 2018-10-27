@@ -1,7 +1,4 @@
-import json
-import logging
-import os
-import telepot
+import json, logging, os, telepot
 
 from django.template.loader import render_to_string
 from django.http import HttpResponseForbidden, HttpResponseBadRequest, JsonResponse
