@@ -8,7 +8,7 @@ CacheControl==0.12.5
 cachetools==2.1.0
 certifi==2018.8.24
 chardet==3.0.4
-Django==2.1.2
+Django==2.1.11
 firebase-admin==2.13.0
 google-api-core==1.4.1
 google-auth==1.5.1
